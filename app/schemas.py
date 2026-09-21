@@ -1,0 +1,60 @@
+from pydantic import BaseModel
+from typing import List, Optional
+
+class UserCreate(BaseModel):
+    name: str
+    email: str
+
+class UserResponse(UserCreate):
+    id: int
+    class Config:
+        from_attributes = True
+
+class ItemResponse(BaseModel):
+    id: int
+    item_name: str
+    price: float
+    class Config:
+        from_attributes = True
+
+class ReceiptResponse(BaseModel):
+    id: int
+    store_name: Optional[str]
+    total_amount: float
+    items: List[ItemResponse]
+    class Config:
+        from_attributes = True
+
+class ShareAssignment(BaseModel):
+    user_id: int
+    fraction: float  # e.g., 0.5 for 1/2, 0.3333 for 1/3
+
+class ItemShareRequest(BaseModel):
+    item_id: int
+    shares: List[ShareAssignment]
+
+class ItemBreakdown(BaseModel):
+    item_name: str
+    cost: float
+
+class UserTotalOwed(BaseModel):
+    user_id: int
+    user_name: str
+    total_owed: float
+    items: List[ItemBreakdown] = []
+
+class UserBulkCreate(BaseModel):
+    names: List[str]
+
+class ItemAssignment(BaseModel):
+    item_id: int
+    user_ids: List[int]
+
+class BulkAssignRequest(BaseModel):
+    receipt_id: int
+    assignments: List[ItemAssignment]
+
+class UserShareRequest(BaseModel):
+    receipt_id: int
+    user_id: int
+    item_ids: List[int]
